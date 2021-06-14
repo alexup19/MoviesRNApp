@@ -1,72 +1,45 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import React, { useEffect, useState }  from 'react';
 
- import React from 'react';
- import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
-   StyleSheet,
-   Text,
-   useColorScheme,
-   View,
- } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
+import styled from 'styled-components/native';
+import axios from 'core/axios';
 
- import {
-   DebugInstructions,
-   Header,
-   LearnMoreLinks,
-   ReloadInstructions,
- } from 'react-native/Libraries/NewAppScreen';
+import TitleBar from 'atoms/title-bar';
+import MoviesList from 'components/molecules/movies-list';
+import { Colors } from 'styles';
 
+import { IMovie } from 'core/domain/movie.interface';
 
- import { Colors } from 'styles';
+const AppContainerView = styled.View`
+  flex: 1;
+  background-color: ${Colors.BLACK};
+`;
 
- import styled from 'styled-components';
+const App = () => {
+  const [movies, setMovies] = useState([] as IMovie[]);
 
- const App = () => {
-   const isDarkMode = useColorScheme() === 'dark';
+  const getMovies = () => {
+    axios.get(`https://api.themoviedb.org/3/movie/popular`)
+    .then(function (response) {
+      setMovies(response.data.results);
+    })
+    .catch(function (error) {
+      console.log(error.response);
+    });
+  }
 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE,
-   };
+  useEffect(() => {
+    getMovies();
+  }, []);
 
-   return (
-     <SafeAreaView style={backgroundStyle}>
-       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-       <ScrollView
-         contentInsetAdjustmentBehavior="automatic"
-         style={backgroundStyle}>
-         <Header />
-       </ScrollView>
-     </SafeAreaView>
-   );
- };
+	return (
+		<AppContainerView>
+      <SafeAreaView />
+			<StatusBar barStyle="light-content" />
+      <TitleBar title="Top Movies" />
+      <MoviesList movies={movies} />
+		</AppContainerView>
+	);
+};
 
- const styles = StyleSheet.create({
-   sectionContainer: {
-     marginTop: 32,
-     paddingHorizontal: 24,
-   },
-   sectionTitle: {
-     fontSize: 24,
-     fontWeight: '600',
-   },
-   sectionDescription: {
-     marginTop: 8,
-     fontSize: 18,
-     fontWeight: '400',
-   },
-   highlight: {
-     fontWeight: '700',
-   },
- });
-
- export default App;
+export default App;
