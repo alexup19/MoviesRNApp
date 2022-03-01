@@ -16,6 +16,7 @@ const MoviesList = ({ movies }: IProps) => {
       title={item.title}
       releaseDate={item.release_date}
       posterPath={item.poster_path}
+      movieId={item.id}
     />
   );
 

@@ -4,6 +4,7 @@ import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import FastImage from 'react-native-fast-image';
 import dayjs from 'dayjs';
+import { useNavigation } from '@react-navigation/native';
 
 import { verticalScale, moderateScale, moderateVerticalScale, scaleFont } from 'utils/scaling';
 import { Colors } from 'styles';
@@ -24,7 +25,7 @@ const Container = styled.View`
   height: ${containerHeight}px;
 `;
 
-const Card = styled.View`
+const Card = styled.TouchableOpacity`
   background-color: #1c1a1a;
   flex: 1;
   align-items: center;
@@ -47,29 +48,40 @@ interface IProps {
   posterPath: string;
   title: string;
   releaseDate: string;
+  movieId: number;
 }
 
-const MovieCard = ({ posterPath, title, releaseDate }: IProps) => (
-  <Container>
-      <Card>
-      <FastImage
-          style={{
-          width: cardWidth,
-          height: imageHeight,
-          borderTopRightRadius: 15,
-          borderTopLeftRadius: 15,
-          }}
-          source={{
-          uri: `https://image.tmdb.org/t/p/w185${posterPath}`,
-          priority: FastImage.priority.normal,
-          }}
-      />
-      <TextContainer>
-          <Text style={{ fontWeight: "bold", fontSize: scaleFont(15) }} numberOfLines={2}>{title}</Text>
-          <Text style={{ paddingTop: verticalScale(8) }}>{dayjs(releaseDate).format('MMMM DD, YYYY')}</Text>
-      </TextContainer>
-      </Card>
-  </Container>
-);
+const MovieCard = ({ posterPath, title, releaseDate, movieId }: IProps) => {
+  const navigation = useNavigation();
+  
+  const onCardPress = () => navigation.navigate('Details', {
+    movieId,
+  });
+
+  return (
+    <Container>
+        <Card
+          onPress={onCardPress}
+        >
+          <FastImage
+            style={{
+              width: cardWidth,
+              height: imageHeight,
+              borderTopRightRadius: 15,
+              borderTopLeftRadius: 15,
+            }}
+            source={{
+              uri: `https://image.tmdb.org/t/p/w185${posterPath}`,
+              priority: FastImage.priority.normal,
+            }}
+          />
+          <TextContainer>
+            <Text style={{ fontWeight: "bold", fontSize: scaleFont(15) }} numberOfLines={2}>{title}</Text>
+            <Text style={{ paddingTop: verticalScale(8) }}>{dayjs(releaseDate).format('MMMM DD, YYYY')}</Text>
+          </TextContainer>
+        </Card>
+    </Container>
+  );
+}
 
 export default MovieCard;

@@ -14,6 +14,7 @@ module.exports = function(api) {
           organisms: './src/components/organisms',
           templates: './src/components/templates',
           utils: './src/utils',
+          screens: './src/screens',
         },
       },
     ],

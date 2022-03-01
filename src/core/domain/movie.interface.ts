@@ -14,3 +14,12 @@ export interface IMovie {
   vote_average: number;
   vote_count: number;
 }
+
+export interface IMovieGenres {
+  id: number;
+  name: string;
+}
+
+export interface IMovieDetails extends IMovie {
+  genres: IMovieGenres[];
+}
